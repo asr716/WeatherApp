@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.weeblyweatherapp.LocationsActivity"
+            android:label="@string/title_activity_locations"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
     </application>
 
 </manifest>
