@@ -15,12 +15,11 @@
         android:textSize="50sp" />
     
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/current_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="San Francisco"
         android:textSize="50sp" />
     
     <Button

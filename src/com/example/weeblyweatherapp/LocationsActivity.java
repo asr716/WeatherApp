@@ -12,13 +12,20 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 
 public class LocationsActivity extends Activity {
 	private final static String ITEM_LOCATION = "item_location";
 	private final static String[] ITEMS = {ITEM_LOCATION};
 	private final static int[] ITEM_IDS = {R.id.location};
 	
+	private Context mContext;
+	private SharedPreferences mSharedPreferences;
 	private ListView mLocationsListView;
 	private List<Map<String, ?>> mLocationsList;
 	
@@ -27,34 +34,105 @@ public class LocationsActivity extends Activity {
 		item.put(ITEM_LOCATION, location);
 		return item;
 	}
+
+	private void createLocationsList() {
+		mLocationsList = new ArrayList<Map<String, ?>>();
+		String csvLocations = mSharedPreferences.getString(MainActivity.LOCATIONS, null);
+		if (csvLocations != null) {
+			String[] locations = csvLocations.split(",");
+			for (String location: locations) {
+				mLocationsList.add(createItem(location));
+			}
+		}
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_locations);
 		
+		mContext = this;
+		mSharedPreferences = getSharedPreferences(MainActivity.MAIN, MODE_PRIVATE);
 		mLocationsListView = (ListView) findViewById(R.id.location_list);
-		mLocationsList = new ArrayList<Map<String, ?>>();
 		
 		// Set current location on click
 		mLocationsListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO: Set to current location on click
+				String current = (String) mLocationsList.get(position).get(ITEM_LOCATION);
+				SharedPreferences.Editor editor = mSharedPreferences.edit();
+				editor.putString(MainActivity.CURRENT, current);
+				editor.commit();
+				// TODO: Do not hard code string in following line
+				Toast.makeText(getApplicationContext(), "Set " + current + " as current location", Toast.LENGTH_LONG).show();
 			}
 		});
 		
 		// Delete location on long click
 		mLocationsListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO: Delete from list on long click
+				final String location = (String) mLocationsList.get(position).get(ITEM_LOCATION);
+				AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(mContext);
+				deleteDialogBuilder.setTitle(getResources().getString(R.string.delete_location_title));
+				deleteDialogBuilder.setMessage(getResources().getString(R.string.delete_location_message));
+				deleteDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						deleteLocation(location);
+						onResume();
+						dialog.dismiss();
+					}
+				});
+				deleteDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+				AlertDialog deleteDialog = deleteDialogBuilder.create();
+				deleteDialog.show();
 				return true;
 			}
 		});
-		
-		// TODO: Add saved locations to mLocationsList
-		mLocationsList.add(createItem("San Francisco"));
-		mLocationsList.add(createItem("Philadelphia"));
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		createLocationsList();
 		mLocationsListView.setAdapter(new SimpleAdapter(this, mLocationsList, R.layout.location_item, ITEMS, ITEM_IDS));
+	}
+	
+	// TODO: handle corner cases
+	private void deleteLocation(String location) {
+		String csvLocations = mSharedPreferences.getString(MainActivity.LOCATIONS, null);
+		int index = csvLocations.indexOf(location);
+		csvLocations = csvLocations.replace(location, "");
+		if (csvLocations.length() > 0) {
+			if (csvLocations.charAt(0) == ',') {
+				// Delete the comma if it is at the beginning of the string
+				csvLocations = csvLocations.substring(1, csvLocations.length());
+			} else if (csvLocations.charAt(csvLocations.length() - 1) == ',') {
+				// Delete the comma if at the end of the string
+				csvLocations = csvLocations.substring(0, csvLocations.length() - 1);
+			} else {
+				// Delete the comma from the middle of the string
+				csvLocations = csvLocations.substring(0, index) + csvLocations.substring(index + 1, csvLocations.length());
+			}
+		}
+		SharedPreferences.Editor editor = mSharedPreferences.edit();
+		if (location.equals(mSharedPreferences.getString(MainActivity.CURRENT, null))) {
+			// If current location was deleted, make current location the first saved location
+			String firstLocation = null;
+			int endIndex = csvLocations.indexOf(",");
+			if (csvLocations.length() == 0) {
+				firstLocation = null;
+				csvLocations = null;
+			} else if (endIndex == -1) {
+				firstLocation = csvLocations;
+			} else {
+				firstLocation = csvLocations.substring(0, endIndex);
+			}
+			editor.putString(MainActivity.CURRENT, firstLocation);
+		}
+		editor.putString(MainActivity.LOCATIONS, csvLocations);
+		editor.commit();
 	}
 }

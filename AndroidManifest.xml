@@ -25,7 +25,7 @@
         <activity
             android:name="com.example.weeblyweatherapp.LocationsActivity"
             android:label="@string/title_activity_locations"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@style/AppTheme" >
         </activity>
     </application>
 
