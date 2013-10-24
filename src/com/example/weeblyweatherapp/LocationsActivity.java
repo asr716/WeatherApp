@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -98,6 +100,18 @@ public class LocationsActivity extends Activity {
 		super.onResume();
 		createLocationsList();
 		mLocationsListView.setAdapter(new SimpleAdapter(this, mLocationsList, R.layout.location_item, ITEMS, ITEM_IDS));
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_locations, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return true;
 	}
 	
 	// TODO: handle corner cases
