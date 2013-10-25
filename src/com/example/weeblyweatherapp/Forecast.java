@@ -6,15 +6,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Forecast {
-	private Day[] days = new Day[4];
+	private Day[] days;
 
-	public Forecast(String json) {
+	public Forecast(String json, int numDays) {
+		days = new Day[numDays];
 		JsonElement jelement = new JsonParser().parse(json);
 		JsonObject jobject = jelement.getAsJsonObject();
 		jobject = jobject.getAsJsonObject("forecast");
 		jobject = jobject.getAsJsonObject("simpleforecast");
 		JsonArray jarray = jobject.getAsJsonArray("forecastday");
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < numDays; i++) {
 			Day day = new Day();
 			JsonObject date = jarray.get(i).getAsJsonObject();
 			JsonObject high = date.getAsJsonObject("high");
@@ -25,6 +26,10 @@ public class Forecast {
 			day.setDate(date.get("month") + "/" + date.get("day"));
 			days[i] = day;
 		}
+	}
+	
+	public Day[] getDays() {
+		return days;
 	}
 	
 	@Override

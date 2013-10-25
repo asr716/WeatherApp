@@ -111,6 +111,7 @@ public class LocationsActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO: enable adding locations
 		return true;
 	}
 	
