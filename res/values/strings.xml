@@ -13,5 +13,7 @@
     <string name="high">HIGH:</string>
     <string name="low">LOW:</string>
     <string name="forecast">Forecast</string>
+    <string name="title_activity_add_location">Add Location</string>
+    <string name="new_location_hint">Enter location</string>
 
 </resources>

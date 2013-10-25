@@ -49,7 +49,9 @@ public class ForecastActivity extends Activity {
 		mForecastListView = (ListView) findViewById(R.id.forecast_list);
 		mForecastList = new ArrayList<Map<String, ?>>();
 		
-		new ForecastAPI().execute("http://api.wunderground.com/api/70fcf8d041fb9d01/forecast10day/q/CA/San_Francisco.json");
+		String location = mSharedPreferences.getString(MainActivity.CURRENT, null);
+		new ForecastAPI().execute("http://api.wunderground.com/api/70fcf8d041fb9d01/forecast10day/q/"
+				+ LocationHelper.convertToURLFormat(location) + ".json");
 	}
 	
 	private void setForecast() {

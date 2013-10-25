@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip"
+    tools:context=".AddLocationActivity" >
+	
+    <EditText
+        android:id="@+id/new_location"
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:textSize="30sp"
+	    android:singleLine="true"
+	    android:imeOptions="actionSearch"
+	    android:hint="@string/new_location_hint" />
+    
+	<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:id="@+id/autocomplete_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:dividerHeight="1sp"
+	    android:fadeScrollbars="false" />
+	
+</LinearLayout>

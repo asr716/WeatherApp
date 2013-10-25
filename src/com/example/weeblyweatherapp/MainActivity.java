@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
 	protected static final String MAIN = "main";
 	protected static final String CURRENT = "current";
 	protected static final String LOCATIONS = "locations";
-	private static final String DEFAULT_LOCATION = "San Francisco";
+	private static final String DEFAULT_LOCATION = "San Francisco, CA";
 
 	private SharedPreferences mSharedPreferences;
 	private CurrentWeather mCurrentWeather;
@@ -38,18 +38,18 @@ public class MainActivity extends Activity {
 		super.onResume();
 		mSharedPreferences = getSharedPreferences(MAIN, MODE_PRIVATE);
 		String location = mSharedPreferences.getString(CURRENT, null);
-		if(location == null) {
+		if (location == null) {
 			// If no locations have been saved, default is San Francisco
 			SharedPreferences.Editor editor = mSharedPreferences.edit();
 			location = DEFAULT_LOCATION;
 			editor.putString(CURRENT, location);
-			// TODO: change following line to just location
-			editor.putString(LOCATIONS, "San Francisco,Philadelphia,Los Angeles,Sydney");
+			editor.putString(LOCATIONS, location);
 			editor.commit();
 		}
 		TextView locationTextView = (TextView) findViewById(R.id.current_location);
 		locationTextView.setText(location);
-		new WeatherAPI().execute("http://api.wunderground.com/api/70fcf8d041fb9d01/conditions/q/CA/San_Francisco.json");
+		new WeatherAPI().execute("http://api.wunderground.com/api/70fcf8d041fb9d01/conditions/q/"
+				+ LocationHelper.convertToURLFormat(location) + ".json");
 	}
 	
 	@Override

@@ -33,6 +33,10 @@
             android:name="com.example.weeblyweatherapp.ForecastActivity"
             android:label="@string/title_activity_forecast" >
         </activity>
+        <activity
+            android:name="com.example.weeblyweatherapp.AddLocationActivity"
+            android:label="@string/title_activity_add_location" >
+        </activity>
     </application>
 
 </manifest>

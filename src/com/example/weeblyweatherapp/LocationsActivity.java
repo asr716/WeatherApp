@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 public class LocationsActivity extends Activity {
@@ -41,7 +42,7 @@ public class LocationsActivity extends Activity {
 		mLocationsList = new ArrayList<Map<String, ?>>();
 		String csvLocations = mSharedPreferences.getString(MainActivity.LOCATIONS, null);
 		if (csvLocations != null) {
-			String[] locations = csvLocations.split(",");
+			String[] locations = csvLocations.split(":");
 			for (String location: locations) {
 				mLocationsList.add(createItem(location));
 			}
@@ -60,12 +61,12 @@ public class LocationsActivity extends Activity {
 		// Set current location on click
 		mLocationsListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String current = (String) mLocationsList.get(position).get(ITEM_LOCATION);
+				String location = (String) mLocationsList.get(position).get(ITEM_LOCATION);
 				SharedPreferences.Editor editor = mSharedPreferences.edit();
-				editor.putString(MainActivity.CURRENT, current);
+				editor.putString(MainActivity.CURRENT, location);
 				editor.commit();
 				// TODO: Do not hard code string in following line
-				Toast.makeText(getApplicationContext(), "Set " + current + " as current location", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Set " + location + " as current location", Toast.LENGTH_LONG).show();
 			}
 		});
 		
@@ -111,7 +112,8 @@ public class LocationsActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO: enable adding locations
+		Intent intent = new Intent(this, AddLocationActivity.class);
+		startActivity(intent);
 		return true;
 	}
 	
@@ -121,14 +123,14 @@ public class LocationsActivity extends Activity {
 		int index = csvLocations.indexOf(location);
 		csvLocations = csvLocations.replace(location, "");
 		if (csvLocations.length() > 0) {
-			if (csvLocations.charAt(0) == ',') {
-				// Delete the comma if it is at the beginning of the string
+			if (csvLocations.charAt(0) == ':') {
+				// Delete the colon if it is at the beginning of the string
 				csvLocations = csvLocations.substring(1, csvLocations.length());
-			} else if (csvLocations.charAt(csvLocations.length() - 1) == ',') {
-				// Delete the comma if at the end of the string
+			} else if (csvLocations.charAt(csvLocations.length() - 1) == ':') {
+				// Delete the colon if at the end of the string
 				csvLocations = csvLocations.substring(0, csvLocations.length() - 1);
 			} else {
-				// Delete the comma from the middle of the string
+				// Delete the colon from the middle of the string
 				csvLocations = csvLocations.substring(0, index) + csvLocations.substring(index + 1, csvLocations.length());
 			}
 		}
@@ -136,7 +138,7 @@ public class LocationsActivity extends Activity {
 		if (location.equals(mSharedPreferences.getString(MainActivity.CURRENT, null))) {
 			// If current location was deleted, make current location the first saved location
 			String firstLocation = null;
-			int endIndex = csvLocations.indexOf(",");
+			int endIndex = csvLocations.indexOf(":");
 			if (csvLocations.length() == 0) {
 				firstLocation = null;
 				csvLocations = null;
