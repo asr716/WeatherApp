@@ -65,15 +65,15 @@ public class ForecastActivity extends Activity {
 		@Override
 		protected String doInBackground(String... args) {
 			String s = "";
-			String json = "";
+			StringBuffer sb = new StringBuffer();
 			try {
 				URL url = new URL(args[0]);
 				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
-					json = json + s;
+					sb.append(s);
 				}
-				mForecast = new Forecast(json, NUM_DAY_FORECAST);
+				mForecast = new Forecast(sb.toString(), NUM_DAY_FORECAST);
 			} catch(IOException e) {
 				return null;
 			}

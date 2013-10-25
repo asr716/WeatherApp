@@ -13,7 +13,7 @@ public class LocationHelper {
 				sb.append(URLEncoder.encode(location.substring(index + 1).trim(), "utf-8") + "/");
 				sb.append(URLEncoder.encode(location.substring(0, index).trim(), "utf-8"));
 			} catch (UnsupportedEncodingException e) {}
-			location = sb.toString();
+			location = sb.toString().replace("+", "%20");
 		}
 		return location;
 	}

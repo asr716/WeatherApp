@@ -72,7 +72,6 @@ public class AddLocationActivity extends Activity {
 					}
 					editor.putString(MainActivity.CURRENT, loc);
 					editor.commit();
-					// TODO: Do not hard code string in following line
 					Toast.makeText(getApplicationContext(), "Added " + loc + " to saved locations", Toast.LENGTH_LONG).show();
 					finish();
 				}
@@ -113,15 +112,15 @@ public class AddLocationActivity extends Activity {
 		@Override
 		protected String doInBackground(String... args) {
 			String s = "";
-			String json = "";
+			StringBuffer sb = new StringBuffer();
 			try {
 				URL url = new URL(args[0]);
 				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
-					json = json + s;
+					sb.append(s);
 				}
-				mLocations = new Locations(json);
+				mLocations = new Locations(sb.toString());
 			} catch(IOException e) {
 				return null;
 			}

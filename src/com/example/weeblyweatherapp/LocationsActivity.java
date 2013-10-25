@@ -65,8 +65,8 @@ public class LocationsActivity extends Activity {
 				SharedPreferences.Editor editor = mSharedPreferences.edit();
 				editor.putString(MainActivity.CURRENT, location);
 				editor.commit();
-				// TODO: Do not hard code string in following line
 				Toast.makeText(getApplicationContext(), "Set " + location + " as current location", Toast.LENGTH_LONG).show();
+				finish();
 			}
 		});
 		

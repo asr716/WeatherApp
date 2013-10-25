@@ -81,15 +81,15 @@ public class MainActivity extends Activity {
 		@Override
 		protected String doInBackground(String... args) {
 			String s = "";
-			String json = "";
+			StringBuffer sb = new StringBuffer();
 			try {
 				URL url = new URL(args[0]);
 				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
-					json = json + s;
+					sb.append(s);
 				}
-				mCurrentWeather = new CurrentWeather(json);
+				mCurrentWeather = new CurrentWeather(sb.toString());
 			} catch(IOException e) {
 				return null;
 			}
