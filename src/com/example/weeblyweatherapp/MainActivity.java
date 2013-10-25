@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,12 +88,9 @@ public class MainActivity extends Activity {
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
 					json = json + s;
-					Log.i("", s);
 				}
 				mCurrentWeather = new CurrentWeather(json);
-				Log.i("", mCurrentWeather.toString());
 			} catch(IOException e) {
-				// TODO: Handle exception
 				return null;
 			}
 			

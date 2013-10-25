@@ -47,8 +47,4 @@ public class Locations {
 	public List<String> getLocations() {
 		return locations;
 	}
-	
-	public String toString() {
-		return locations.toString();
-	}
 }

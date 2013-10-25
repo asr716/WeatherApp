@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -73,12 +72,9 @@ public class ForecastActivity extends Activity {
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
 					json = json + s;
-					Log.i("", s);
 				}
 				mForecast = new Forecast(json, NUM_DAY_FORECAST);
-				Log.i("", mForecast.toString());
 			} catch(IOException e) {
-				// TODO: Handle exception
 				return null;
 			}
 			

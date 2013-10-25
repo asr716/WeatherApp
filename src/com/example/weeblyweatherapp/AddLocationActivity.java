@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -57,7 +56,10 @@ public class AddLocationActivity extends Activity {
 		mSharedPreferences = getSharedPreferences(MainActivity.MAIN, MODE_PRIVATE);
 		mLocationsListView = (ListView) findViewById(R.id.autocomplete_list);
 		mLocationsListView.setOnItemClickListener(new OnItemClickListener() {
+			
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// If location is not already saved, add location, set it to current, and return to home
 				String loc = ((String) mLocationsList.get(position).get(ITEM_LOCATION)).trim();
 				String locations = mSharedPreferences.getString(MainActivity.LOCATIONS, null);
 				if (locations != null && !locations.contains(loc)) {
@@ -68,17 +70,22 @@ public class AddLocationActivity extends Activity {
 					} else {
 						editor.putString(MainActivity.LOCATIONS, loc);
 					}
+					editor.putString(MainActivity.CURRENT, loc);
 					editor.commit();
 					// TODO: Do not hard code string in following line
 					Toast.makeText(getApplicationContext(), "Added " + loc + " to saved locations", Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}
+			
 		});
+		
 		mEditText = (EditText) findViewById(R.id.new_location);
 		mEditText.setOnEditorActionListener(new OnEditorActionListener() {
+			
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				// When user enters, send request to API
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 					InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE); 
 					inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -89,6 +96,7 @@ public class AddLocationActivity extends Activity {
 				}
 				return false;
 			}
+			
 		});
 	}
 
@@ -112,12 +120,9 @@ public class AddLocationActivity extends Activity {
 				BufferedReader rd = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 				while ((s = rd.readLine()) != null) {
 					json = json + s;
-					Log.i("", s);
 				}
 				mLocations = new Locations(json);
-				Log.i("", mLocations.toString());
 			} catch(IOException e) {
-				// TODO: Handle exception
 				return null;
 			}
 			

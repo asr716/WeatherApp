@@ -18,10 +18,10 @@ public class Forecast {
 		for (int i = 0; i < numDays; i++) {
 			Day day = new Day();
 			JsonObject date = jarray.get(i).getAsJsonObject();
-			JsonObject high = date.getAsJsonObject("high");
-			day.setHigh(high.get("fahrenheit").toString());
-			JsonObject low = date.getAsJsonObject("low");
-			day.setLow(low.get("fahrenheit").toString());
+			JsonObject temp = date.getAsJsonObject("high");
+			day.setHigh(temp.get("fahrenheit").toString());
+			temp = date.getAsJsonObject("low");
+			day.setLow(temp.get("fahrenheit").toString());
 			date = date.getAsJsonObject("date");
 			day.setDate(date.get("month") + "/" + date.get("day"));
 			days[i] = day;
@@ -30,14 +30,5 @@ public class Forecast {
 	
 	public Day[] getDays() {
 		return days;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		for (Day day: days) {
-			sb.append(day.getDate() + " (high: " + day.getHigh() + ", low: " + day.getLow() + ") ");
-		}
-		return sb.toString();
 	}
 }

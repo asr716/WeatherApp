@@ -113,11 +113,17 @@ public class LocationsActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = new Intent(this, AddLocationActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, 1);
 		return true;
 	}
-	
-	// TODO: handle corner cases
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1) {
+			finish();
+		}
+	}
+
 	private void deleteLocation(String location) {
 		String csvLocations = mSharedPreferences.getString(MainActivity.LOCATIONS, null);
 		int index = csvLocations.indexOf(location);
